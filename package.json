@@ -1,0 +1,17 @@
+{
+    "name": "typewriter",
+    "description": "A jquery text animation effect that imitates typewriter machines.",
+    "version": "0.9.1",
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/rulemotion/typewriter.git"
+    },
+    "main": "source/index.html",
+    "dependencies": {},
+    "devDependencies": {
+        "uglify-js": "latest",
+        "wrench": "latest",
+        "knox": "latest"
+    },
+    "optionalDependencies": {}
+}
