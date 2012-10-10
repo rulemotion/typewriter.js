@@ -56,7 +56,7 @@
             return setInterval(function () {
                 node.nodeValue = hidden ? "" : cursor;
                 hidden = !hidden;
-            }, delay);   
+            }, delay);
         }
     }
 
@@ -66,9 +66,7 @@
      * @param callback {function=}.
      */
     $.fn.typewrite = function (settings, callback) {
-        var textNodes = [],
-            values = [],
-            i, node;
+        var textNodes = [], values = [], i, node;
         //make sure settings are specified
         settings = $.extend({
             speed: 60,
@@ -108,4 +106,25 @@
         //traverse the text nodes
         traverse(textNodes);
     };
+
+    /**
+     * Replaces left quotes with left curly quotes and right quotes with right curly quotes.
+     */
+    $.fn.curlyQuotes = function () {
+        var textNodes = [], i, node;
+        //retrieve all text nodes
+        this.each(function () {
+            textNodes = textNodes.concat(getTextNodes(this));
+        });
+        //empty the text nodes, store value in hidden property
+        for (i = 0; i < textNodes.length; i++) {
+            node = textNodes[i];
+            node.nodeValue = node.nodeValue
+                .replace(/(^|\s+)'/g, "$1\u2018")
+                .replace(/(\S+)'/g, "$1\u2019")
+                .replace(/(^|\s+)"/g, "$1\u201c")
+                .replace(/(\S+)"/g, "$1\u201d");
+        }
+    };
+
 }(jQuery));
