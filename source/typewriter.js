@@ -82,7 +82,6 @@
         //empty the text nodes, store value in hidden property
         for (i = 0; i < textNodes.length; i++) {
             node = textNodes[i];
-            console.log(node.nodeValue);
             values.push(node.nodeValue);
             node.nodeValue = "";
         }
