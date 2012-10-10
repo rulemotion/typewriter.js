@@ -89,7 +89,7 @@
                 cursor = document.createTextNode(settings.cursor);
                 node.parentElement.appendChild(cursor);
                 blinking = blink(cursor, settings.blink);
-                type(node, node._data, settings.type, 0, function () {
+                type(node, node._data, settings.speed, 0, function () {
                     clearInterval(blinking);
                     cursor.parentElement.removeChild(cursor);
                     delete node._data;//delete extra data
