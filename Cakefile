@@ -23,8 +23,6 @@ env = do ->
             e.length is 2
         )
     return obj
-    
-console.log env
 
 ###
 Stores an index of files included in the build.
