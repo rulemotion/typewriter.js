@@ -50,10 +50,14 @@
     function blink(node, delay) {
         var hidden = true,
             cursor = node.nodeValue;
-        return setInterval(function () {
-            node.nodeValue = hidden ? "" : cursor;
-            hidden = !hidden;
-        }, delay);
+        if (cursor === "") {
+            return -1;
+        } else {
+            return setInterval(function () {
+                node.nodeValue = hidden ? "" : cursor;
+                hidden = !hidden;
+            }, delay);   
+        }
     }
 
     /**
@@ -62,7 +66,9 @@
      * @param callback {function=}.
      */
     $.fn.typewrite = function (settings, callback) {
-        var textNodes, i, node;
+        var textNodes = [],
+            values = [],
+            i, node;
         //make sure settings are specified
         settings = $.extend({
             speed: 60,
@@ -70,29 +76,30 @@
             cursor: "_"
         }, settings);
         //retrieve all text nodes
-        textNodes = [];
         this.each(function () {
             textNodes = textNodes.concat(getTextNodes(this));
         });
         //empty the text nodes, store value in hidden property
         for (i = 0; i < textNodes.length; i++) {
             node = textNodes[i];
-            node._data = node.nodeValue;
+            console.log(node.nodeValue);
+            values.push(node.nodeValue);
             node.nodeValue = "";
         }
         //create function to traverse the text nodes
         function traverse(textNodes, i) {
-            var node, cursor, blinking;
+            var node, value, cursor, blinking;
             i = i || 0;
             if (i < textNodes.length) {
                 node = textNodes[i];
+                value = values[i];
                 cursor = document.createTextNode(settings.cursor);
-                node.parentElement.appendChild(cursor);
+                $(node).after(cursor);
                 blinking = blink(cursor, settings.blink);
-                type(node, node._data, settings.speed, 0, function () {
+                type(node, value, settings.speed, 0, function () {
                     clearInterval(blinking);
-                    cursor.parentElement.removeChild(cursor);
-                    delete node._data;//delete extra data
+                    $(cursor).remove();
+                    //delete node._data;//delete extra data
                     traverse(textNodes, i + 1);
                 });
             } else if (typeof callback === "function") {
