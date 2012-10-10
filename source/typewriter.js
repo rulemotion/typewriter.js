@@ -43,13 +43,15 @@
 
     /**
      * Blinks the cursor at the end of a string.
-     * @param node {Object} a DOM node holding the cursor.
+     * @param node {Object} a DOM text node containing the cursor.
      * @param delay {number} time delay between cursor blinks.
      * @return {number} the id of the blinking interval.
      */
     function blink(node, delay) {
-        var hidden = true;
+        var hidden = true,
+            cursor = node.nodeValue;
         return setInterval(function () {
+            node.nodeValue = hidden ? "" : cursor;
             hidden = !hidden;
         }, delay);
     }
@@ -63,7 +65,7 @@
         var textNodes, i, node;
         //make sure settings are specified
         settings = $.extend({
-            type: 60,
+            speed: 60,
             blink: 200,
             cursor: "_"
         }, settings);
@@ -85,11 +87,11 @@
             if (i < textNodes.length) {
                 node = textNodes[i];
                 cursor = document.createTextNode(settings.cursor);
-                $(node).after(cursor);
+                node.parentElement.appendChild(cursor);
                 blinking = blink(cursor, settings.blink);
                 type(node, node._data, settings.type, 0, function () {
                     clearInterval(blinking);
-                    cursor.nodeValue = " ";
+                    cursor.parentElement.removeChild(cursor);
                     delete node._data;//delete extra data
                     traverse(textNodes, i + 1);
                 });
