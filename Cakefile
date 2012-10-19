@@ -104,17 +104,18 @@ task "deploy", "Deploys files under #{dest} to Amazon S3.", (options) ->
     client = knox.createClient({
         key: env.AMAZON_S3_ACCESS_KEY
         secret: env.AMAZON_S3_SECRET_KEY
-        bucket: "typewriterjs"
+        bucket: env.AMAZON_S3_BUCKET
     })
+    path = env.AMAZON_S3_PATH || ""
     wrench.readdirSyncRecursive(dest).forEach((file) ->
         stats = fs.statSync("#{dest}/#{file}")
         if stats.isFile()
-            client.putFile("#{dest}/#{file}", "/#{file}", {
+            client.putFile("#{dest}/#{file}", "#{path}/#{file}", {
                 "x-amz-acl": "public-read"
             }, (error, response) ->
                 if error
                     console.error error
                 else
-                    console.log file, response.statusCode
+                    console.log "#{path}/#{file}", response.statusCode
             )
     )
